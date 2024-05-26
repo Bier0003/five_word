@@ -1,55 +1,82 @@
-﻿namespace five_word
+﻿using System.Diagnostics.Tracing;
+using System;
+using System.IO;
+using System.Linq;
+using System.Diagnostics;
+using five_word.Library;
+using System.Threading;
+using System.Data;
+using System.Reflection.Metadata;
+
+
+namespace five_word
 {
     public class Program
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("________________________________________________________________________________________\n");
+            Console.WriteLine(" Five letters Five words Look up !\n");
+            Console.WriteLine("_________________________________________________________________________________________\n");
 
-            string result = Word();
-            Console.WriteLine(result);
-            SaveReSult(result);
-        }
+            Console.WriteLine("write your path file\n");
+            Console.WriteLine("Patch :   ");
 
-        static void SaveReSult(string result)
-        {
-            string SavePath = @"C:\Users\b\OneDrive\Documents\h2\five_word\five_word\firstfive.txt";
-            try
-            {
+            string File = Console.ReadLine();
 
-                File.WriteAllText(SavePath, result);
+            Console.WriteLine("\n");
+            Console.WriteLine("****************************************************************************************\n");
 
-                Console.WriteLine("Save successful!");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error :{ex.message}");
-            }
+            Console.WriteLine("We operation looking for 5 letters  5 words from your file ....\n");
 
-        }
+            Thread.Sleep(1000);
 
+            var openfile = new Openfile(File);
+            var wordLoader = new ValidWordLoader();
+            var wordSorter = new WordSorter();
 
+            var stopwatch = Stopwatch.StartNew();
+            var loadedWords = wordLoader.ReadFileFromFileStream(openfile.GetFileStream());
+            var sortedWords = wordSorter.FilterWords(loadedWords);
+            var matchedWords = wordSorter.MatchWord(sortedWords);
+            stopwatch.Stop();
 
-        static string Word()
-        {
+            Console.WriteLine($"words from input: {loadedWords.Count}");
+            Console.WriteLine($"\nFund {matchedWords.Count} combinations");
+            Console.WriteLine("The combinations are:");
+            foreach (var validWordCombination in matchedWords)
+                Console.WriteLine(String.Join(" ", validWordCombination));
+            
 
-            string[] Alphabet = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+            Console.WriteLine("________________________________________________________________________________________\n");
 
-            string result = "";
-            for (int j = 0; j < 5; j++)
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    result += (Alphabet[i + (5 * j)]);
-                }
-                // Console.Write('\n');
-                result += '\n';
-            }
+            Console.WriteLine($"Time  in milliseconds: {stopwatch.ElapsedMilliseconds}");
 
-            return result;
+            Console.WriteLine("________________________________________________________________________________________\n");
 
 
 
 
+
+            //    var Openfile = new Openfile("words_beta_new.txt");
+
+
+            //    var stopwatch = Stopwatch.StartNew();
+            ////    for (int i = 0; i < 5; i++)
+            //  //  {
+            //        var Content = Openfile.Run();
+            //    // }
+
+            //    stopwatch.Stop();
+
+            //    Console.WriteLine($"Time in milliseconds: {stopwatch.ElapsedMilliseconds}");
+
+            //[first task]
+
+            //var result = SaveFile.Word();
+            //Console.WriteLine(result);
+
+            //SaveFile.SaveReSult(result);
         }
     }
 }
