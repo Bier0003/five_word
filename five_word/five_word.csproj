@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary\five_word.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="firstfive.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
